@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useAuth } from "@/lib/auth-provider"
-import { Button } from "@/components/ui/button"
+import { useAuth } from "@/lib/auth-provider";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,15 +9,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ModeToggle } from "@/components/mode-toggle"
-import { Building2, Menu, User } from "lucide-react"
-import Link from "next/link"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { SideNav } from "@/components/side-nav"
+} from "@/components/ui/dropdown-menu";
+import { ModeToggle } from "@/components/mode-toggle";
+import { Building2, Menu, User } from "lucide-react";
+import Link from "next/link";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SideNav } from "@/components/side-nav";
 
 export function TopNav() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 flex h-12 items-center gap-4 border-b border-gray-100 bg-white px-3 sm:px-4">
@@ -39,7 +39,12 @@ export function TopNav() {
         <span className="font-medium text-sm">Tactology</span>
       </div>
       <div className="ml-auto flex items-center gap-1">
-        <ModeToggle />
+        {/* <ModeToggle /> */}
+        {/* greet the user */}
+        <span className="text-sm font-medium text-gray-700">
+          {user ? `Hello, ${user.username}` : "Welcome"}
+        </span>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -48,7 +53,9 @@ export function TopNav() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuLabel className="text-xs">{user ? user.username : "Account"}</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs">
+              {user ? user.username : "Account"}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild className="text-xs">
               <Link href="/dashboard/profile">Profile</Link>
@@ -64,5 +71,5 @@ export function TopNav() {
         </DropdownMenu>
       </div>
     </header>
-  )
+  );
 }

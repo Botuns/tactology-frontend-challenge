@@ -1,47 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { gql, useMutation } from "@apollo/client"
+import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
 
 const DELETE_DEPARTMENT = gql`
-  mutation DeleteDepartment($id: Int!) {
+  mutation DeleteDepartment($id: ID!) {
     deleteDepartment(id: $id)
   }
-`
+`;
 
 interface UseDepartmentDeleteOptions {
-  onSuccess?: () => void
-  onError?: (error: Error) => void
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
 }
 
 export function useDepartmentDelete(options: UseDepartmentDeleteOptions = {}) {
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [deleteDepartmentMutation] = useMutation(DELETE_DEPARTMENT, {
     onCompleted: () => {
-      setIsDeleting(false)
+      setIsDeleting(false);
       if (options.onSuccess) {
-        options.onSuccess()
+        options.onSuccess();
       }
     },
     onError: (error) => {
-      setIsDeleting(false)
+      setIsDeleting(false);
       if (options.onError) {
-        options.onError(error)
+        options.onError(error);
       }
     },
-  })
+  });
 
   const deleteDepartment = async (id: number | string) => {
-    setIsDeleting(true)
+    setIsDeleting(true);
     try {
       await deleteDepartmentMutation({
         variables: { id: typeof id === "string" ? Number.parseInt(id) : id },
-      })
+      });
     } catch (error) {
-      // Error is handled by the mutation callbacks
+      setIsDeleting(false);
     }
-  }
+  };
 
-  return { deleteDepartment, isDeleting }
+  return { deleteDepartment, isDeleting };
 }

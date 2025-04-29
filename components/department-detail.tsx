@@ -1,18 +1,32 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useQuery, gql } from "@apollo/client"
-import Link from "next/link"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Edit, Loader2, Trash } from "lucide-react"
-import { useDepartmentDelete } from "@/lib/department-hooks"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery, gql } from "@apollo/client";
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Edit, Loader2, Trash } from "lucide-react";
+import { useDepartmentDelete } from "@/lib/department-hooks";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const GET_DEPARTMENT = gql`
-  query GetDepartment($id: Int!) {
+  query GetDepartment($id: ID!) {
     department(id: $id) {
       id
       name
@@ -22,45 +36,45 @@ const GET_DEPARTMENT = gql`
       }
     }
   }
-`
+`;
 
 export function DepartmentDetail({ id }: { id: string }) {
-  const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const { data, loading } = useQuery(GET_DEPARTMENT, {
     variables: { id: Number.parseInt(id) },
     onError: (error) => {
-      setError(`Error loading department: ${error.message}`)
+      setError(`Error loading department: ${error.message}`);
     },
-  })
+  });
 
   const { deleteDepartment, isDeleting } = useDepartmentDelete({
     onSuccess: () => router.push("/dashboard"),
-  })
+  });
 
   if (loading)
     return (
       <div className="flex justify-center p-8">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
-    )
+    );
 
   if (error)
     return (
       <Alert variant="destructive">
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-    )
+    );
 
-  const department = data?.department
+  const department = data?.department;
 
   if (!department)
     return (
       <Alert>
         <AlertDescription>Department not found</AlertDescription>
       </Alert>
-    )
+    );
 
   return (
     <div className="space-y-5">
@@ -68,8 +82,12 @@ export function DepartmentDetail({ id }: { id: string }) {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg font-medium">{department.name}</CardTitle>
-              <CardDescription className="text-xs">Department Details</CardDescription>
+              <CardTitle className="text-lg font-medium">
+                {department.name}
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Department Details
+              </CardDescription>
             </div>
             <div className="flex gap-1.5">
               <Link href={`/dashboard/departments/${id}/edit`}>
@@ -103,7 +121,9 @@ export function DepartmentDetail({ id }: { id: string }) {
                 <p className="text-sm">{department.id}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Name</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  Name
+                </p>
                 <p className="text-sm">{department.name}</p>
               </div>
             </div>
@@ -129,16 +149,22 @@ export function DepartmentDetail({ id }: { id: string }) {
                 </TableBody>
               </Table>
             ) : (
-              <p className="text-xs text-muted-foreground">No sub-departments found for this department</p>
+              <p className="text-xs text-muted-foreground">
+                No sub-departments found for this department
+              </p>
             )}
           </div>
         </CardContent>
         <CardFooter className="border-t">
-          <Button variant="ghost" onClick={() => router.back()} className="h-8 text-xs">
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="h-8 text-xs"
+          >
             Back
           </Button>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
